@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Portfolio</title>
+  </head>
+  <body>
+    <div id="portfolio"></div>
+    <footer>&copy; 2023 My Portfolio</footer>
+
+    <script>
+      fetch('https://photos.app.goo.gl/17faPr2xUTT64yru6')
+        .then(response => response.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const photos = Array.from(doc.querySelectorAll('.ry3kXd')).map(photo => {
+            const img = photo.querySelector('.n3VNCb');
+            return {
+              id: img.getAttribute('data-id'),
+              url: img.getAttribute('src'),
+              alt: img.getAttribute('aria-label')
+            };
+          });
+          displayPhotos(photos);
+        });
+
+      function displayPhotos(photos) {
+        const portfolio = document.getElementById('portfolio');
+        photos.forEach(photo => {
+          const img = document.createElement('img');
+          img.src = photo.url;
+          img.alt = photo.alt;
+          portfolio.appendChild(img);
+        });
+      }
+    </script>
+  </body>
+</html>
