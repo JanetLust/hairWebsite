@@ -1,38 +1,73 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My Portfolio</title>
+    <title>Janet Lust - Hairstylist</title>
+    <style>
+      .nav-link {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    </style>
   </head>
   <body>
-    <div id="portfolio"></div>
-    <footer>&copy; 2023 My Portfolio</footer>
+    <header>
+      <h1>Janet Lust - Hairstylist</h1>
+      <h2>Over 22 years of experience</h2>
+      <nav>
+        <span class="nav-link" id="portfolio-link">Portfolio</span> |
+        <span class="nav-link" id="landing-link">Home</span> |
+        <span class="nav-link" id="booking-link">Book an Appointment</span>
+      </nav>
+    </header>
+    <main id="content"></main>
+    <footer>&copy; 2023 Janet Lust - Hairstylist</footer>
+php
+Copy code
+<script>
+  document.getElementById('portfolio-link').addEventListener('click', loadPortfolio);
+  document.getElementById('landing-link').addEventListener('click', loadLanding);
+  document.getElementById('booking-link').addEventListener('click', openBooking);
 
-    <script>
-      fetch('https://photos.app.goo.gl/17faPr2xUTT64yru6')
-        .then(response => response.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          const photos = Array.from(doc.querySelectorAll('.ry3kXd')).map(photo => {
-            const img = photo.querySelector('.n3VNCb');
-            return {
-              id: img.getAttribute('data-id'),
-              url: img.getAttribute('src'),
-              alt: img.getAttribute('aria-label')
-            };
-          });
-          displayPhotos(photos);
-        });
+  function loadLanding() {
+    const content = document.getElementById('content');
+    content.innerHTML = '<h2>Welcome to Janet Lust Hairstylist</h2><p>Explore my portfolio and book an appointment today!</p>';
+  }
 
-      function displayPhotos(photos) {
-        const portfolio = document.getElementById('portfolio');
-        photos.forEach(photo => {
-          const img = document.createElement('img');
-          img.src = photo.url;
-          img.alt = photo.alt;
-          portfolio.appendChild(img);
+  function loadPortfolio() {
+    fetch('https://photos.app.goo.gl/17faPr2xUTT64yru6')
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const photos = Array.from(doc.querySelectorAll('.ry3kXd')).map(photo => {
+          const img = photo.querySelector('.n3VNCb');
+          return {
+            id: img.getAttribute('data-id'),
+            url: img.getAttribute('src'),
+            alt: img.getAttribute('aria-label')
+          };
         });
-      }
-    </script>
+        displayPhotos(photos);
+      });
+
+    function displayPhotos(photos) {
+      const content = document.getElementById('content');
+      content.innerHTML = '<h2>Portfolio</h2>';
+      photos.forEach(photo => {
+        const img = document.createElement('img');
+        img.src = photo.url;
+        img.alt = photo.alt;
+        content.appendChild(img);
+      });
+    }
+  }
+
+  function openBooking() {
+    window.open('https://janetlust.glossgenius.com/services', '_blank');
+  }
+
+  // Load the landing page by default
+  loadLanding();
+</script>
   </body>
 </html>
